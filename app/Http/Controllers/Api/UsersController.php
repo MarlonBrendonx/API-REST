@@ -73,7 +73,7 @@ class UsersController extends Controller
               if ( \Auth::attempt($data,true) ){
                
                 $user=User::where('email',$request->get('email'))->first();
-                return response()->json(ApiError::errorMessage($user->remember_token, 201,true));
+                return response()->json(ApiError::errorMessage($user, 201,true));
 
               }
 
@@ -137,4 +137,52 @@ class UsersController extends Controller
 
     }
    
+    //------------------------------------------------------------------------------------------------------------------//
+
+    public function update(Request $request){
+
+        $data=[
+
+                'strfield' => $request->get('strfield'),
+                'field'    => $request->get('field'),
+                'token'    => $request->get('token')
+
+        ];
+
+        try{
+
+            $user=User::where('remember_token', '=', $data['token'])->firstOrFail();
+            
+            switch( $data['field'] ){
+
+                case 'name':
+                    $user->name = $request->get('strfield');
+                break;    
+                case 'email':
+                    $user->email = $request->get('strfield');
+                break;
+
+                case 'phone':
+                    $user->phone = $request->get('strfield');
+                break;
+
+               
+
+                
+            }
+            
+            $user->save();
+
+            return response()->json(ApiError::errorMessage("Dados alterados com sucesso!!", 201,true));
+
+        }catch(\Exception $e){
+
+            return response()->json(ApiError::errorMessage($e->getMessage(),1010,false));
+
+        }
+     
+
+    }
+
+
 }

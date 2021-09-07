@@ -2,7 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\MapEventsController;
 use App\Http\Controllers\Api\UsersController;
+use App\Http\Controllers\Api\AnimalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,8 +31,23 @@ Route::namespace('API')->name('api.')->group(function(){
         Route::post('/',[UsersController::class, 'register']);
         Route::post('/login',[UsersController::class, 'login']);
         Route::post('/checkToken',[UsersController::class, 'checkToken']);
-       
+        Route::post('/update',[UsersController::class, 'update']);
     
+    });
+
+    Route::prefix('events')->group(function(){
+
+        Route::get('/',[MapEventsController::class, 'index']);
+        Route::post('/',[MapEventsController::class, 'register']);
+        
+       
+    });
+
+    Route::prefix('animal')->group(function(){
+
+        Route::get('/',[AnimalController::class, 'index']);
+        
+       
     });
 
 });
