@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;   
 use App\Models\Events;
 use App\Api\ApiError;
+use App\Models\User;
+use App\Http\Controllers\Api\UsersController;
 
 class MapEventsController extends Controller
 {
@@ -16,15 +18,32 @@ class MapEventsController extends Controller
     public function __construct(Events $event){
 
         $this->event=$event;
-       
+ 
     }
 
 
-    public function index(){
+    public function index(Request $request){
+        
+        
+        try{
 
-        $data= [ 'data' => $this->event->all() ]; 
+            $json=app('App\Http\Controllers\Api\UsersController')->checkToken($request);
+            $value=json_decode ($json->content(), true);
+            
+            if( $value['status'] ){
 
-        return  response()->json($data);
+                $data= [ 'data' => $this->event->all() ]; 
+                return response()->json(ApiError::errorMessage($data,201,true));
+
+            }else{
+
+                return response()->json(ApiError::errorMessage('Permissão negada!',1010,false));
+            }
+
+        }catch( \Exception $e){
+
+                return response()->json(ApiError::errorMessage($e->getMessage(),1010,true));
+        }
 
     }
 
@@ -35,20 +54,6 @@ class MapEventsController extends Controller
 
             $event = $request->all();
             
-            if( $event['type'] === 0 ){
-
-                $event['icon']='event_1.png';
-
-            }else if ( $event['type'] == 1 ){
- 
-                $event['icon']='event_2.png';
-
-            }else{
-                
-                $event['icon']='event_3.png';
-
-            }
-
             $this->event->create($event);
     
             return response()->json(ApiError::errorMessage('Evento adicionado!',201,true));

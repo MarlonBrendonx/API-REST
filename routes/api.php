@@ -37,7 +37,7 @@ Route::namespace('API')->name('api.')->group(function(){
 
     Route::prefix('events')->group(function(){
 
-        Route::get('/',[MapEventsController::class, 'index']);
+        Route::post('/get',[MapEventsController::class, 'index']);
         Route::post('/',[MapEventsController::class, 'register']);
         
        

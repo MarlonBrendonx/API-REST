@@ -20,12 +20,11 @@ class Events extends Migration
             $table->integer('type');
             $table->string('latitude');
             $table->string('longitude');
-            $table->string('icon');
-            $table->string('status');
+            $table->string('status')->nullable()->default(null);
             $table->string('photos')->nullable()->default(null);
             $table->string('information');
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('animal_id');
+            $table->unsignedInteger('animal_id')->nullable()->default(null);
             
             $table->timestamps();
             $table->foreign('animal_id')->references('id')->on('animals');
