@@ -38,14 +38,17 @@ Route::namespace('API')->name('api.')->group(function(){
     Route::prefix('events')->group(function(){
 
         Route::post('/get',[MapEventsController::class, 'index']);
+        Route::post('/getOptions',[MapEventsController::class, 'getEventOptions']);
         Route::post('/',[MapEventsController::class, 'register']);
-        
+        Route::post('/uploadImage',[MapEventsController::class, 'uploadImage']);
        
     });
 
     Route::prefix('animal')->group(function(){
 
         Route::get('/',[AnimalController::class, 'index']);
+        Route::post('/',[AnimalController::class, 'register']);
+        
         
        
     });

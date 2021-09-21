@@ -22,7 +22,8 @@ class Animal extends Model{
         'sex',
         'photos',
         'personality',
-        'information'
+        'information',
+        'users_id'
 
     ];
 

@@ -37,7 +37,7 @@ class AnimalController extends Controller{
            
             $this->animal->create($animal);
     
-            return response()->json(ApiError::errorMessage('Evento adicionado!',201,true));
+            return response()->json(ApiError::errorMessage('Animal adicionado',201,true));
 
         } catch(\Exception $e){
 
@@ -45,7 +45,7 @@ class AnimalController extends Controller{
                 return response()->json(ApiError::errorMessage($e->getMessage(), 1010,false));
             }
 
-            return response()->json(ApiError::errorMessage('Não conseguimos cadastrar o evento :(', 1010,false));
+            return response()->json(ApiError::errorMessage('Não conseguimos cadastrar o animal :(', 1010,false));
 
         }
 

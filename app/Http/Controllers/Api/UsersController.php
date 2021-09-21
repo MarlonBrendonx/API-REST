@@ -123,6 +123,8 @@ class UsersController extends Controller
 
                 'name'           =>$user->name,
                 'email'          =>$user->email,
+                'phone'          =>$user->phone,
+                'id'             =>$user->id,
                 'remember_token' =>$user->remember_token
                 
             ];

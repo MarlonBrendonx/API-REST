@@ -8,6 +8,7 @@ use App\Models\Events;
 use App\Api\ApiError;
 use App\Models\User;
 use App\Http\Controllers\Api\UsersController;
+use Illuminate\Support\Facades\DB;
 
 class MapEventsController extends Controller
 {
@@ -21,19 +22,21 @@ class MapEventsController extends Controller
  
     }
 
+    
 
     public function index(Request $request){
         
-        
+
         try{
 
             $json=app('App\Http\Controllers\Api\UsersController')->checkToken($request);
+
             $value=json_decode ($json->content(), true);
             
             if( $value['status'] ){
 
-                $data= [ 'data' => $this->event->all() ]; 
-                return response()->json(ApiError::errorMessage($data,201,true));
+                $events=app('App\Repositories\EventsRepository')->getEvents();
+                return response()->json(ApiError::errorMessage([ 'data' => $events ],201,true));
 
             }else{
 
@@ -42,14 +45,14 @@ class MapEventsController extends Controller
 
         }catch( \Exception $e){
 
-                return response()->json(ApiError::errorMessage($e->getMessage(),1010,true));
+                return response()->json(ApiError::errorMessage($e->getMessage(),1010,false));
         }
 
     }
 
     public function register(Request $request){
         
-       
+
         try{
 
             $event = $request->all();
@@ -68,9 +71,36 @@ class MapEventsController extends Controller
             return response()->json(ApiError::errorMessage('Não conseguimos cadastrar o evento :(', 1010,false));
 
         }
+   
 
     }
     
+    public function uploadImage(Request $request){
+
+        try{   
+
+            $images=$request->file('image');
+            $images->store('images/'.$request->get('id_user'),'public');
+
+            
+            return response()->json(ApiError::errorMessage("ok",201,true));
+
+        }catch(\Exception $e){
+
+            return response()->json(ApiError::errorMessage("Error",1010,false));
+
+        }
+
+
+    }
+
+
+    public function getEventOptions(Request $request){
+        
+        $events=app('App\Repositories\EventsRepository')->getEventsOptions($request);
+        return response()->json(ApiError::errorMessage($events->all(),205,true));
+
+    }
     
 
 }
