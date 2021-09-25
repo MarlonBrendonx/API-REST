@@ -41,6 +41,7 @@ Route::namespace('API')->name('api.')->group(function(){
         Route::post('/getOptions',[MapEventsController::class, 'getEventOptions']);
         Route::post('/',[MapEventsController::class, 'register']);
         Route::post('/uploadImage',[MapEventsController::class, 'uploadImage']);
+        Route::post('/remove',[MapEventsController::class, 'removeEvent']);
        
     });
 

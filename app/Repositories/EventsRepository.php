@@ -19,12 +19,13 @@ class EventsRepository {
                 ->join('users','animals.users_id','=','users.id')
                 ->select('events.id as id_event','events.type','events.latitude','events.longitude','events.status',
                 'events.photos','events.information','animals.name','animals.sex','animals.personality','users.name as username',
-                'users.phone')
+                'users.phone','users.id as user_id')
                 ->get();
 
         $events=DB::table('events')
                 ->select('events.id as id_event','events.type','events.latitude','events.longitude','events.status',
-                'events.photos','events.information')
+                'events.photos','events.information','users.id as user_id')
+                ->join('users','events.user_id','=','users.id')
                 ->whereNull('events.animal_id')
                 ->get();
 

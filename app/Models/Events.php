@@ -20,7 +20,6 @@ class Events extends Model{
         'status',
         'latitude',
         'longitude',
-        'icon',
         'photos',
         'information',
         'animal_id',
