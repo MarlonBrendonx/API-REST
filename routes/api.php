@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\MapEventsController;
 use App\Http\Controllers\Api\UsersController;
 use App\Http\Controllers\Api\AnimalController;
+use App\Http\Controllers\Api\ResolvedEvents;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,14 @@ Route::namespace('API')->name('api.')->group(function(){
         Route::post('/',[MapEventsController::class, 'register']);
         Route::post('/uploadImage',[MapEventsController::class, 'uploadImage']);
         Route::post('/remove',[MapEventsController::class, 'removeEvent']);
+       
+    });
+
+    Route::prefix('resolvedevents')->group(function(){
+
+        Route::post('/get',[ResolvedEvents::class, 'index']);
+        Route::post('/',[ResolvedEvents::class, 'register']);
+       
        
     });
 
