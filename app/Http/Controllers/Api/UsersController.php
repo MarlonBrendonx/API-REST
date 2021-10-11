@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;    
 use App\Models\User;
 use App\Api\ApiError;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Illuminate\Filesystem\Filesystem;
 
 class UsersController extends Controller
 {
@@ -17,9 +20,7 @@ class UsersController extends Controller
 
         $this->user=$user;
        
-
     }
-
 
     public function index(){
 
@@ -53,6 +54,47 @@ class UsersController extends Controller
 
         }
     }
+
+
+    public function getAvatar($user){
+
+
+        try{
+
+            $files=Storage::disk('public')->allFiles('images/'.$user->id.'/perfil/');
+            
+            if( $files ){
+
+       
+
+                foreach( $files as $file ){
+
+                    $path = storage_path('app/public/' . $file);
+                    $file_contents=file_get_contents($path);
+
+                    $user->{"photo"}=base64_encode($file_contents);
+
+                    
+                }
+                
+            }else{
+
+                $user->{"photo"}=null;
+                
+            }
+            
+
+            return $user;
+
+        }catch(\Exception $e){
+
+            return response()->json(ApiError::errorMessage('Get avatar error'.$e->getMessage(), 1010,false));
+
+
+        }
+
+    }
+
     
     public function login(Request $request){
 
@@ -73,6 +115,9 @@ class UsersController extends Controller
               if ( \Auth::attempt($data,true) ){
                
                 $user=User::where('email',$request->get('email'))->first();
+
+                $user=$this->getAvatar($user);
+
                 return response()->json(ApiError::errorMessage($user, 201,true));
 
               }
@@ -90,11 +135,11 @@ class UsersController extends Controller
 
               }else{
 
-                if( $user->password != $request->get('password') ){
+                    if( $user->password != $request->get('password') ){
 
-                    return response()->json(ApiError::errorMessage('Senha incorreta!', 1010,false));
+                        return response()->json(ApiError::errorMessage('Senha incorreta!', 1010,false));
 
-                }
+                    }
 
             }
 
@@ -118,22 +163,13 @@ class UsersController extends Controller
         try{
 
             $user=User::where('remember_token',$request->get('token'))->first();
+            $user=$this->getAvatar($user);
 
-            $userData=[
-
-                'name'           =>$user->name,
-                'email'          =>$user->email,
-                'phone'          =>$user->phone,
-                'id'             =>$user->id,
-                'remember_token' =>$user->remember_token
-                
-            ];
-
-            return response()->json(ApiError::errorMessage($userData, 201,true));
-
+            return response()->json(ApiError::errorMessage($user, 201,true));
+            
         }catch(\Exception $e){
 
-            return response()->json(ApiError::errorMessage('Token inválido:'+$e->getMessage(), 1010,false));
+            return response()->json(ApiError::errorMessage($e->getMessage(), 1010,false));
 
         }
 
@@ -168,9 +204,6 @@ class UsersController extends Controller
                     $user->phone = $request->get('strfield');
                 break;
 
-               
-
-                
             }
             
             $user->save();
@@ -186,5 +219,29 @@ class UsersController extends Controller
 
     }
 
+    public function uploadImagePerfil(Request $request){
 
+  
+        try{   
+
+            
+            if( File::exists('public/images/'.$request->get('user_id').'/perfil/') )
+                $response = Storage::deleteDirectory('public/images/'.$request->get('user_id').'/perfil/');
+
+            
+                $images=$request->file('image');
+                $images->store('images/'.$request->get('user_id').'/perfil/','public');
+
+            return response()->json(ApiError::errorMessage("ok",201,true));
+
+        
+        }catch(\Exception $e){
+
+            return response()->json(ApiError::errorMessage("Error",1010,false));
+
+        }
+        return response()->json(ApiError::errorMessage($request->all(),1010,false));
+
+
+    }
 }

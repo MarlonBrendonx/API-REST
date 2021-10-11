@@ -31,9 +31,7 @@ class ResolvedEvents extends Controller
 
     public function register(Request $request){
         
-        return response()->json(ApiError::errorMessage($request->all(),1010,true));
-
-
+       
         try{
 
             $json=app('App\Http\Controllers\Api\UsersController')->checkToken($request);
@@ -42,16 +40,21 @@ class ResolvedEvents extends Controller
             
             if( $value['status'] ){
                 
-                $data=[
-
-                    'event_id' => $request->get('event_id'),
-                    'user_id'  => $request->get('user_id')
-
-                ];
-
                 $this->resolved->create($data);
 
-                return response()->json(ApiError::errorMessage($data,1010,true));
+                /* Mudando o status */
+                $sts=app('App\Repositories\EventsRepository')->changeStatusevent($request);
+
+                /* Enviando notificação */
+                $res=app('App\Http\Controllers\Api\NotificationsController')->register($request);
+
+                if( $sts && $res ){
+
+                    return response()->json(ApiError::errorMessage('Evento adicionado!',205,true));
+
+                }else{
+                    return response()->json(ApiError::errorMessage('Erro ao adicionar o evento!',1010,false));
+                }
 
             }else{
 
@@ -69,9 +72,6 @@ class ResolvedEvents extends Controller
 
 
     }
-
-
-
 
 
 }

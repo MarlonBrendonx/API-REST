@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\MapEventsController;
 use App\Http\Controllers\Api\UsersController;
 use App\Http\Controllers\Api\AnimalController;
 use App\Http\Controllers\Api\ResolvedEvents;
+use App\Http\Controllers\Api\NotificationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,12 +34,14 @@ Route::namespace('API')->name('api.')->group(function(){
         Route::post('/login',[UsersController::class, 'login']);
         Route::post('/checkToken',[UsersController::class, 'checkToken']);
         Route::post('/update',[UsersController::class, 'update']);
+        Route::post('/uploadImagePerfil',[UsersController::class, 'uploadImagePerfil']);
     
     });
 
     Route::prefix('events')->group(function(){
 
         Route::post('/get',[MapEventsController::class, 'index']);
+        Route::post('/getbyId',[MapEventsController::class, 'indexbyId']);
         Route::post('/getOptions',[MapEventsController::class, 'getEventOptions']);
         Route::post('/',[MapEventsController::class, 'register']);
         Route::post('/uploadImage',[MapEventsController::class, 'uploadImage']);
@@ -51,16 +54,20 @@ Route::namespace('API')->name('api.')->group(function(){
         Route::post('/get',[ResolvedEvents::class, 'index']);
         Route::post('/',[ResolvedEvents::class, 'register']);
        
-       
+    });
+
+    Route::prefix('notifications')->group(function(){
+
+        Route::post('/get',[NotificationsController::class, 'getNotificationsById']);
+        Route::post('/',[NotificationsController::class, 'register']);
+      
     });
 
     Route::prefix('animal')->group(function(){
 
         Route::get('/',[AnimalController::class, 'index']);
         Route::post('/',[AnimalController::class, 'register']);
-        
-        
-       
+           
     });
 
 });
