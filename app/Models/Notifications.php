@@ -20,6 +20,7 @@ class Notifications extends Model
         'user_id_event',
         'message',
         'type',
+        'id_event'
 
 
     ];

@@ -33,22 +33,28 @@ class UsersController extends Controller
     public function register(Request $request){
 
        
-        try{
+        try{    
 
+            $user=User::where('email',$request->get('email'))->first();
+            $user_phone=User::where('phone',$request->get('phone'))->first();
+
+            if( $user != null )
+                return response()->json(ApiError::errorMessage('O email já está cadastrado !',1010,false));
+
+            if( $user_phone != null )
+                return response()->json(ApiError::errorMessage('O telefone já está cadastrado !',1010,false));
+                
             $request->password=bcrypt($request->password);
             $userData = $request->all();
             $userData['password']=$request->password;
             $userData['remember_token']=\Str::random(60);
- 
-            $this->user->create($userData);
     
+            $this->user->create($userData);
+        
             return response()->json(ApiError::errorMessage('Usuário adicionado!',201,true));
+            
 
         } catch(\Exception $e){
-
-            if( config('app.debug') ){
-                return response()->json(ApiError::errorMessage($e->getMessage(), 1010,false));
-            }
 
             return response()->json(ApiError::errorMessage('Não conseguimos cadastrar o usuário :(', 1010,false));
 
@@ -66,7 +72,6 @@ class UsersController extends Controller
             if( $files ){
 
        
-
                 foreach( $files as $file ){
 
                     $path = storage_path('app/public/' . $file);
@@ -221,16 +226,14 @@ class UsersController extends Controller
 
     public function uploadImagePerfil(Request $request){
 
-  
         try{   
 
             
-            if( File::exists('public/images/'.$request->get('user_id').'/perfil/') )
-                $response = Storage::deleteDirectory('public/images/'.$request->get('user_id').'/perfil/');
-
-            
-                $images=$request->file('image');
-                $images->store('images/'.$request->get('user_id').'/perfil/','public');
+            if( Storage::exists('public/images/'.$request->get('user_id').'/perfil/') )
+                $response = Storage::deleteDirectory('public/images/'.$request->get('user_id').'/perfil');
+               
+            $images=$request->file('image');
+            $images->store('images/'.$request->get('user_id').'/perfil/','public');
 
             return response()->json(ApiError::errorMessage("ok",201,true));
 
@@ -240,8 +243,41 @@ class UsersController extends Controller
             return response()->json(ApiError::errorMessage("Error",1010,false));
 
         }
+
+
         return response()->json(ApiError::errorMessage($request->all(),1010,false));
 
 
     }
+    
+    public function removeUser(Request $request){
+
+
+        if( \Auth::attempt([ 'email' => $request->get('email'), 'password' => $request->get('passwd') ],true) ){
+            
+            if( $user=User::where('email',$request->get('email'))->first() ){
+
+
+                if( Storage::exists('public/images/'.$user->id) )
+                    Storage::deleteDirectory('public/images/'.$user->id);
+
+                $user->delete();
+
+                return response()->json(ApiError::errorMessage("Usuário deletado!",201,true));
+
+            }else{
+
+                return response()->json(ApiError::errorMessage("Não foi possível remover o usuário",1010,false));
+            
+            }
+        
+        }else{
+
+            return response()->json(ApiError::errorMessage("Senha incorreta !",1010,false));
+
+        }
+        
+    }
+
+
 }

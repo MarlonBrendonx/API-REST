@@ -18,12 +18,15 @@ class Notifications extends Migration
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('user_id_event');
+            $table->unsignedInteger('id_event');
             $table->string('message');
             $table->integer("type");
             $table->timestamps();
 
        
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('id_event')->references('id')->on('events')->onDelete('cascade');
+
         });
 
     }

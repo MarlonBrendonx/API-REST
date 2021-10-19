@@ -35,8 +35,6 @@ class MapEventsController extends Controller
 
     public function index(Request $request){
         
-       
-
         try{
 
             $json=app('App\Http\Controllers\Api\UsersController')->checkToken($request);
@@ -46,6 +44,7 @@ class MapEventsController extends Controller
             if( $value['status'] ){
 
                 
+                $request->merge(['user_id' => $value['msg']['id'] ]);
                 $events=app('App\Repositories\EventsRepository')->getEvents();
                 
 
@@ -64,8 +63,12 @@ class MapEventsController extends Controller
                     
                     
                 }
+              
+             
+                $qtdMessage=app('App\Repositories\NotificationsRepository')->getNotificationsById($request);
+             
 
-                return response()->json(ApiError::errorMessage([ 'data' => $events ],201,true));
+                return response()->json(ApiError::errorMessage([ 'data' => $events,'qtd' => $qtdMessage->count() ],201,true));
 
             }else{
 
@@ -81,7 +84,6 @@ class MapEventsController extends Controller
 
     public function indexbyId(Request $request){
         
-       
         try{
 
             $json=app('App\Http\Controllers\Api\UsersController')->checkToken($request);
@@ -105,8 +107,6 @@ class MapEventsController extends Controller
 
                     }
                 
-                    
-                    
                 }
  
                 return response()->json(ApiError::errorMessage([ 'data' => $events ],201,true));
@@ -169,16 +169,6 @@ class MapEventsController extends Controller
 
 
     }
-
-    /*
-    public function getEventOptions(Request $request){
-        
-        $events=app('App\Repositories\EventsRepository')->getEventsOptions($request);
-
-        return response()->json(ApiError::errorMessage($events->all(),205,true));
-
-    }
-    */
     
     public function getEventOptions(Request $request){
       
@@ -205,7 +195,6 @@ class MapEventsController extends Controller
     
     public function removeEvent(Request $request){
 
-        
 
         try{
 
@@ -235,5 +224,37 @@ class MapEventsController extends Controller
        
     }
     
+    public function UpdateEvent(Request $request){
+
+        try{
+
+            $json=app('App\Http\Controllers\Api\UsersController')->checkToken($request);
+
+            $value=json_decode ($json->content(), true);
+            
+            if( $value['status'] ){
+
+                
+                $event=DB::table('events')
+                ->where('id', $request->get('id_event'))
+                ->update([
+                      
+                        'information'       => $request->get('information'),
+                        'status'            => $request->get('status')
+                ]);
+
+                return response()->json(ApiError::errorMessage("Evento atualizado",205,true));    
+
+            }else{
+
+                return response()->json(ApiError::errorMessage('Permissão negada!',1010,false));
+            }
+
+        }catch( \Exception $e){
+
+                return response()->json(ApiError::errorMessage("Erro ao alterar o evento !",1010,false));
+        }
+
+    }
 
 }

@@ -30,8 +30,8 @@ class ResolvedEvents extends Controller
     }
 
     public function register(Request $request){
-        
-       
+
+
         try{
 
             $json=app('App\Http\Controllers\Api\UsersController')->checkToken($request);
@@ -40,7 +40,6 @@ class ResolvedEvents extends Controller
             
             if( $value['status'] ){
                 
-                $this->resolved->create($data);
 
                 /* Mudando o status */
                 $sts=app('App\Repositories\EventsRepository')->changeStatusevent($request);
@@ -48,14 +47,24 @@ class ResolvedEvents extends Controller
                 /* Enviando notificação */
                 $res=app('App\Http\Controllers\Api\NotificationsController')->register($request);
 
-                if( $sts && $res ){
+
+                $data=[
+
+                    'event_id' => $request->get('event_id'),
+                    'user_id'  => $request->get('user_id'),
+                    
+
+                ];
+
+                $res_json=json_decode ($res->content(), true);
+                
+
+                $this->resolved->create($data);
+   
 
                     return response()->json(ApiError::errorMessage('Evento adicionado!',205,true));
 
-                }else{
-                    return response()->json(ApiError::errorMessage('Erro ao adicionar o evento!',1010,false));
-                }
-
+               
             }else{
 
                 return response()->json(ApiError::errorMessage('Permissão negada !',1010,false));

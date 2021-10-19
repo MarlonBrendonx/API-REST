@@ -17,11 +17,11 @@ class NotificationsRepository {
 
         $notifications=DB::table('users')
                 ->join('notifications', 'notifications.user_id', '=', 'users.id')
-                ->select('notifications.user_id_event as id','notifications.user_id','notifications.type','notifications.message','users.name')
-                ->where('users.id','=',$request->get('user_id'))
+                ->select('notifications.user_id_event','notifications.user_id as id',
+                 'notifications.type','notifications.message','users.name','users.phone','notifications.created_at','notifications.id_event','notifications.id as id_notification')
+                ->where('notifications.user_id_event','=',$request->get('user_id'))
                 ->get();
 
-    
         return  $notifications;
      
     }

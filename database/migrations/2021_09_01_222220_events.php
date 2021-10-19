@@ -27,8 +27,8 @@ class Events extends Migration
             $table->unsignedInteger('animal_id')->nullable()->default(null);
             
             $table->timestamps();
-            $table->foreign('animal_id')->references('id')->on('animals');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('animal_id')->references('id')->on('animals')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');;
         });
         
     }

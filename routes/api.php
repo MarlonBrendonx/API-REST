@@ -35,6 +35,7 @@ Route::namespace('API')->name('api.')->group(function(){
         Route::post('/checkToken',[UsersController::class, 'checkToken']);
         Route::post('/update',[UsersController::class, 'update']);
         Route::post('/uploadImagePerfil',[UsersController::class, 'uploadImagePerfil']);
+        Route::post('/remove',[UsersController::class, 'removeUser']);
     
     });
 
@@ -46,6 +47,7 @@ Route::namespace('API')->name('api.')->group(function(){
         Route::post('/',[MapEventsController::class, 'register']);
         Route::post('/uploadImage',[MapEventsController::class, 'uploadImage']);
         Route::post('/remove',[MapEventsController::class, 'removeEvent']);
+        Route::post('/update',[MapEventsController::class, 'updateEvent']);
        
     });
 
@@ -60,6 +62,7 @@ Route::namespace('API')->name('api.')->group(function(){
 
         Route::post('/get',[NotificationsController::class, 'getNotificationsById']);
         Route::post('/',[NotificationsController::class, 'register']);
+        Route::post('/remove',[NotificationsController::class, 'removeNotification']);
       
     });
 
