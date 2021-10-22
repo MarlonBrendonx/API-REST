@@ -18,12 +18,14 @@ class Animal extends Model{
     protected $fillable = [
 
         'name',
-        'breed',
         'sex',
         'photos',
-        'personality',
+        'users_id',
+        'age',
+        'species',
+        'breed',
         'information',
-        'users_id'
+        'remember_token'
 
     ];
 

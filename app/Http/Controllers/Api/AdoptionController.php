@@ -20,11 +20,47 @@ class AdoptionController extends Controller{
     }
 
 
-    public function index(){
+   public function index(Request $request){
+        //return response()->json(ApiError::errorMessage($request->all(),201,true));
+        try{
 
-        $data= [ 'data' => $this->adocao->all() ]; 
+            $json=app('App\Http\Controllers\Api\UsersController')->checkToken($request);
 
-        return  response()->json($data);
+            $value=json_decode ($json->content(), true);
+            
+            if( $value['status'] ){
+
+                
+                $adoption=app('App\Repositories\AdoptionRepository')->getAdoption($request);
+       
+                /*
+                foreach ($animals as $animals) {
+
+                    //$files=Storage::disk('public')->allFiles($animals->photos.'/'.$animals->id_animals);
+
+                    foreach( $files as $file ){
+
+                        $path = storage_path('app/public/' . $file);
+                        $file=file_get_contents($path);
+                        $animals->{"images"}[]=base64_encode($file);
+
+                    }
+                
+                    
+                    
+                }*/
+
+                return response()->json(ApiError::errorMessage([ 'data' => $adoption ],201,true));
+
+            }else{
+
+                return response()->json(ApiError::errorMessage('Permissão negada!',1010,false));
+            }
+
+        }catch( \Exception $e){
+
+                return response()->json(ApiError::errorMessage($e->getMessage(),1010,false));
+        }
 
     }
 

@@ -84,6 +84,7 @@ class MapEventsController extends Controller
 
     public function indexbyId(Request $request){
         
+
         try{
 
             $json=app('App\Http\Controllers\Api\UsersController')->checkToken($request);
@@ -216,7 +217,6 @@ class MapEventsController extends Controller
 
                  
                 $response = Storage::deleteDirectory('public/images/'.$request->get('user_id').'/'.$request->get('id_event'));
-                
                 $event=DB::table('events')->where('id', $request->get('id_event'))->delete();
 
                 return response()->json(ApiError::errorMessage("Evento removido!",205,true));    
@@ -250,36 +250,29 @@ class MapEventsController extends Controller
                     
                     
                     case 1:
-
                         $event->information = $request->get('information');
                         $event->save();
-
                     break;
 
                     case 2:
-
                         $event->information = $request->get('information');
                         $event->status      = $request->get('status');
                         $event->save();
-
+                    break;
+                    
+                    case 0:
+                        $event->animal_id   = $request->get('id_animal');
+                        $event->information = $request->get('information');
+                        $event->status      = $request->get('status');
+                        $event->save();
                     break;
 
                     case 0:
                     
                     break;
 
-                    
-
                 }
-                /*
-                $event=DB::table('events')
-                ->where('id', $request->get('id_event'))
-                ->update([
-                      
-                        'information'       => $request->get('information'),
-                        'status'            => $request->get('status')
-                ]);
-                */
+                
                 return response()->json(ApiError::errorMessage("Evento atualizado",205,true));    
 
             }else{

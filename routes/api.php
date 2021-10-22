@@ -20,7 +20,7 @@ use App\Http\Controllers\Api\NotificationsController;
 */
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+        return $request->user();
 });
 
 
@@ -67,11 +67,28 @@ Route::namespace('API')->name('api.')->group(function(){
       
     });
 
-    Route::prefix('animal')->group(function(){
+    Route::prefix('animals')->group(function(){
 
-        Route::get('/',[AnimalController::class, 'index']);
+        Route::post('/get',[AnimalController::class, 'index']);
         Route::post('/',[AnimalController::class, 'register']);
            
     });
+    Route::prefix('adocaos')->group(function(){
+
+        Route::post('/get',[AdoptionController::class, 'index']);
+        Route::post('/',[AdoptionController::class, 'register']);
+        
+        
+       
+    });
+    Route::prefix('doacaos')->group(function(){
+
+        Route::post('/get',[DoacaoController::class, 'index']);
+        Route::post('/',[DoacaoController::class, 'register']);
+        
+        
+       
+    });
+
 
 });

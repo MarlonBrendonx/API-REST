@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Doacao extends Migration
+class Animal extends Migration
 {
     /**
      * Run the migrations.
@@ -14,18 +14,23 @@ class Doacao extends Migration
     public function up()
     {
         //
-         Schema::create('donation', function (Blueprint $table) {
+        Schema::create('animals', function (Blueprint $table) {
 
             $table->increments('id');
-            $table->string('title');
-            $table->string('sobre');
+            $table->string('name');
+            $table->string('sex');
             $table->string('photos')->nullable()->default(null);
+            $table->string('information');
             $table->unsignedInteger('users_id');
-
+            $table->string('age');
+            $table->string('species');
+            $table->string('breed');
             $table->foreign('users_id')->references('id')->on('users');
 
             $table->rememberToken();
-        });  
+            $table->timestamps();
+
+        });
     }
 
     /**
@@ -36,6 +41,5 @@ class Doacao extends Migration
     public function down()
     {
         //
-         Schema::dropIfExists('doacao');
     }
 }

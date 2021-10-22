@@ -19,12 +19,48 @@ class AnimalController extends Controller{
        
     }
 
+    public function index(Request $request){
+        
+       
+		try{
 
-    public function index(){
+            $json=app('App\Http\Controllers\Api\UsersController')->checkToken($request);
 
-        $data= [ 'data' => $this->animal->all() ]; 
+            $value=json_decode ($json->content(), true);
+            
+            if( $value['status'] ){
 
-        return  response()->json($data);
+                
+                $animals=app('App\Repositories\AnimalsRepository')->getAnimals($request);
+       
+                /*
+                foreach ($animals as $animals) {
+
+                    //$files=Storage::disk('public')->allFiles($animals->photos.'/'.$animals->id_animals);
+
+                    foreach( $files as $file ){
+
+                        $path = storage_path('app/public/' . $file);
+                        $file=file_get_contents($path);
+                        $animals->{"images"}[]=base64_encode($file);
+
+                    }
+                
+                    
+                    
+                }*/
+
+                return response()->json(ApiError::errorMessage([ 'data' => $animals ],201,true));
+
+            }else{
+
+                return response()->json(ApiError::errorMessage('Permissão negada!',1010,false));
+            }
+
+        }catch( \Exception $e){
+
+                return response()->json(ApiError::errorMessage($e->getMessage(),1010,false));
+        }
 
     }
 
@@ -33,19 +69,18 @@ class AnimalController extends Controller{
         try{
 
             
-            $animal = $request->all();
+            $animals = $request->all();
            
-            $this->animal->create($animal);
+            $this->animal->create($animals);
     
-            return response()->json(ApiError::errorMessage('Animal adicionado',201,true));
+            return response()->json(ApiError::errorMessage('Animal adicionado!',201,true));
 
         } catch(\Exception $e){
-
             if( config('app.debug') ){
+
                 return response()->json(ApiError::errorMessage($e->getMessage(), 1010,false));
             }
-
-            return response()->json(ApiError::errorMessage('Não conseguimos cadastrar o animal :(', 1010,false));
+            return response()->json(ApiError::errorMessage('Não conseguimos cadastrar o evento :(', 1010,false));
 
         }
 

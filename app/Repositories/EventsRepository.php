@@ -18,7 +18,7 @@ class EventsRepository {
                 ->join('animals', 'events.animal_id', '=', 'animals.id')
                 ->join('users','animals.users_id','=','users.id')
                 ->select('events.id as id_event','events.type','events.latitude','events.longitude','events.status',
-                'events.photos','events.information','animals.name','animals.sex','animals.personality','users.name as username',
+                'events.photos','events.information','animals.name','animals.sex','animals.species','animals.breed','animals.age','users.name as username',
                 'users.phone','users.id as user_id')
                 ->get();
 
@@ -39,7 +39,7 @@ class EventsRepository {
                 ->join('animals', 'events.animal_id', '=', 'animals.id')
                 ->join('users','animals.users_id','=','users.id')
                 ->select('events.id as id_event','events.type','events.latitude','events.longitude','events.status',
-                'events.photos','events.information','animals.name','animals.sex','animals.personality','users.name as username',
+                'events.photos','events.information','animals.id as id_animal','animals.name','animals.sex','animals.species','animals.breed','animals.age','users.name as username',
                 'users.phone','users.id as user_id')
                 ->where('users.remember_token','=',$request->get('token'))
                 ->get();
@@ -62,7 +62,7 @@ class EventsRepository {
                 ->join('animals', 'events.animal_id', '=', 'animals.id')
                 ->join('users','animals.users_id','=','users.id')
                 ->select('events.id as id_event','events.type','events.latitude','events.longitude','events.status',
-                'events.photos','events.information','animals.name','animals.sex','animals.personality','users.name as username',
+                'events.photos','events.information','animals.name','animals.sex','animals.species','animals.breed','animals.age','users.name as username',
                 'users.phone')
                 ->where('events.type','=',$request->get('option'))
                 ->get();
@@ -95,7 +95,7 @@ class EventsRepository {
                 ->join('animals', 'events.animal_id', '=', 'animals.id')
                 ->join('users','animals.users_id','=','users.id')
                 ->select('events.id as id_event','events.type','events.latitude','events.longitude','events.status',
-                'events.photos','events.information','animals.name','animals.sex','animals.personality','users.name as username',
+                'events.photos','events.information','animals.name','animals.sex','animals.species','animals.breed','animals.age','users.name as username',
                 'users.phone','users.id as user_id')
                 ->where('users.remember_token','=',$request->get('token'))
                 ->where('animals.name', 'like', '%'.$request->get('search').'%')

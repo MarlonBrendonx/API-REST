@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Animal extends Migration
+class Donation extends Migration
 {
     /**
      * Run the migrations.
@@ -14,26 +14,20 @@ class Animal extends Migration
     public function up()
     {
         //
-
-        Schema::create('animals', function (Blueprint $table) {
+         Schema::create('donation', function (Blueprint $table) {
 
             $table->increments('id');
-            $table->string('name');
-            $table->string('sex');
+            $table->string('title');
+            $table->string('sobre');
+            $table->string('link');
+            
             $table->string('photos')->nullable()->default(null);
-            $table->string('personality');
-            $table->string('information');
             $table->unsignedInteger('users_id');
 
-            $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('users_id')->references('id')->on('users');
 
             $table->rememberToken();
-            $table->timestamps();
-
         });
-
-
-
     }
 
     /**
@@ -43,6 +37,7 @@ class Animal extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('animal');
+        //
+        Schema::dropIfExists('donation');
     }
 }
