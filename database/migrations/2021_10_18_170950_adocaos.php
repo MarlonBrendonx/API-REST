@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Adocao extends Migration
+class Adocaos extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class Adocao extends Migration
     public function up()
     {
         //
-        Schema::create('adoption', function (Blueprint $table) {
+         Schema::create('adocaos', function (Blueprint $table) {
 
             $table->increments('id');
             $table->string('name');
@@ -28,7 +28,7 @@ class Adocao extends Migration
             $table->foreign('animals_id')->references('id')->on('animals');
 
             $table->rememberToken();
-        });    
+        });
     }
 
     /**
@@ -39,6 +39,6 @@ class Adocao extends Migration
     public function down()
     {
         //
-        Schema::dropIfExists('adocao');
+        Schema::dropIfExists('adocaos');
     }
 }

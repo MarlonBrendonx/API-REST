@@ -22,6 +22,7 @@ class Doacao extends Model{
         'photos',
         'users_id',
         'link'
+      
     ];
 
     /**

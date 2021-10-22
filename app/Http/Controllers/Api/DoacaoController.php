@@ -20,12 +20,45 @@ class DoacaoController extends Controller{
     }
 
 
-    public function index(){
+    public function index(Request $request){
+        try{
+            $json=app('App\Http\Controllers\Api\UsersController')->checkToken($request);
 
-        $data= [ 'data' => $this->doacao->all() ]; 
+            $value=json_decode ($json->content(), true);
+            
+            if( $value['status'] ){
 
-        return  response()->json($data);
+                
+                $donation=app('App\Repositories\DonationRepository')->getDonation($request);
+       
+                /*
+                foreach ($animals as $animals) {
 
+                    //$files=Storage::disk('public')->allFiles($animals->photos.'/'.$animals->id_animals);
+
+                    foreach( $files as $file ){
+
+                        $path = storage_path('app/public/' . $file);
+                        $file=file_get_contents($path);
+                        $animals->{"images"}[]=base64_encode($file);
+
+                    }
+                
+                    
+                    
+                }*/
+
+                return response()->json(ApiError::errorMessage([ 'data' => $donation ],201,true));
+
+            }else{
+
+                return response()->json(ApiError::errorMessage('Permissão negada!',1010,false));
+            }
+
+        }catch( \Exception $e){
+
+                return response()->json(ApiError::errorMessage($e->getMessage(),1010,false));
+        }
     }
 
     public function register(Request $request){

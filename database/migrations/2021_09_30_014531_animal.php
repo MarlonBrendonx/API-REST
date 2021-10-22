@@ -14,26 +14,23 @@ class Animal extends Migration
     public function up()
     {
         //
-
         Schema::create('animals', function (Blueprint $table) {
 
             $table->increments('id');
             $table->string('name');
             $table->string('sex');
             $table->string('photos')->nullable()->default(null);
-            $table->string('personality');
             $table->string('information');
             $table->unsignedInteger('users_id');
-
+            $table->string('age');
+            $table->string('species');
+             $table->string('breed');
             $table->foreign('users_id')->references('id')->on('users');
 
             $table->rememberToken();
             $table->timestamps();
 
         });
-
-
-
     }
 
     /**
@@ -43,6 +40,6 @@ class Animal extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('animal');
+        //
     }
 }
