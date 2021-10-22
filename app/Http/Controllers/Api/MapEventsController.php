@@ -171,26 +171,36 @@ class MapEventsController extends Controller
     }
     
     public function getEventOptions(Request $request){
-      
+     
+     try{
+         
+        
         if( $request->get('typeOption') == 'Map' )
             $events=$this->index($request);
         else
             $events=$this->indexbyId($request);
 
 
+        
         $values=json_decode ($events->content(), true);
         $eventsOption=array();
 
-        for($v=0; $v < sizeof($values); $v++) {
+
+        for($v=0; $v < sizeof($values['msg']['data']); $v++) {
 
             if( $values['msg']['data'][$v]['type'] == $request->get('option') )
                 array_push($eventsOption,$values['msg']['data'][$v]);
 
         }
 
-        
         return response()->json(ApiError::errorMessage($eventsOption,205,true));
+    
+     }catch( \Exception $e){
         
+        return response()->json(ApiError::errorMessage($e->getMessage(),1010,false));
+        
+     }
+
     }
     
     public function removeEvent(Request $request){
@@ -234,7 +244,34 @@ class MapEventsController extends Controller
             
             if( $value['status'] ){
 
+                $event = Events::find($request->get('id_event'));
                 
+                switch( $request->get('type') ){
+                    
+                    
+                    case 1:
+
+                        $event->information = $request->get('information');
+                        $event->save();
+
+                    break;
+
+                    case 2:
+
+                        $event->information = $request->get('information');
+                        $event->status      = $request->get('status');
+                        $event->save();
+
+                    break;
+
+                    case 0:
+                    
+                    break;
+
+                    
+
+                }
+                /*
                 $event=DB::table('events')
                 ->where('id', $request->get('id_event'))
                 ->update([
@@ -242,7 +279,7 @@ class MapEventsController extends Controller
                         'information'       => $request->get('information'),
                         'status'            => $request->get('status')
                 ]);
-
+                */
                 return response()->json(ApiError::errorMessage("Evento atualizado",205,true));    
 
             }else{
@@ -254,6 +291,50 @@ class MapEventsController extends Controller
 
                 return response()->json(ApiError::errorMessage("Erro ao alterar o evento !",1010,false));
         }
+
+    }
+
+
+    public function searchEvent(Request $request){
+
+        try{
+
+            $json=app('App\Http\Controllers\Api\UsersController')->checkToken($request);
+
+            $value=json_decode ($json->content(), true);
+            
+            if( $value['status'] ){
+
+                 
+                $events=app('App\Repositories\EventsRepository')->searchEvent($request);
+
+                foreach ($events as $event) {
+
+                    $files=Storage::disk('public')->allFiles($event->photos.'/'.$event->id_event);
+
+                    foreach( $files as $file ){
+
+                        $path = storage_path('app/public/' . $file);
+                        $file=file_get_contents($path);
+                        $event->{"images"}[]=base64_encode($file);
+
+                    }
+                
+                }
+
+                return response()->json(ApiError::errorMessage(['data' => $events, 'count'=> $events->count()],205,true));    
+
+            }else{
+
+                return response()->json(ApiError::errorMessage('Permissão negada!',1010,false));
+            }
+
+        }catch( \Exception $e){
+
+                return response()->json(ApiError::errorMessage("Nenhum evento encontrado ! ",1010,false));
+        }
+        
+
 
     }
 
