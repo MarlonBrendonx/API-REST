@@ -279,5 +279,55 @@ class UsersController extends Controller
         
     }
 
+    public function redfinePass(Request $request){
+
+       try{
+
+            if( env('PASSWORD_HASH')  ){
+
+            
+                $data=[
+
+                    'email'    => $request->get('email'),
+                    'password' => $request->get('passwd') 
+    
+                ];
+
+                if( \Auth::attempt($data,true) ){
+
+            
+                    if( $user=User::where('remember_token',$request->get('token'))->first() ){
+
+            
+                        $user->password=$request->get('newpasswd');
+                        $user->save();
+
+                        return response()->json(ApiError::errorMessage("Senha alterada !",201,true));
+
+                    }else{
+
+                        return response()->json(ApiError::errorMessage("Não foi possível alterar a senha",1010,false));
+                    
+                    }
+
+                
+                
+                }else{
+
+                    return response()->json(ApiError::errorMessage("Senha atual incorreta!",1010,false));
+
+                }
+
+            }
+
+     }catch(\Exception $e){
+
+            return response()->json(ApiError::errorMessage($e->getMessage(),1010,false));
+
+     }
+
+
+    }
+
 
 }

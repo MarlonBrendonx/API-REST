@@ -36,6 +36,8 @@ Route::namespace('API')->name('api.')->group(function(){
         Route::post('/update',[UsersController::class, 'update']);
         Route::post('/uploadImagePerfil',[UsersController::class, 'uploadImagePerfil']);
         Route::post('/remove',[UsersController::class, 'removeUser']);
+        Route::post('/redfinepass',[UsersController::class, 'redfinePass']);
+    
     
     });
 
