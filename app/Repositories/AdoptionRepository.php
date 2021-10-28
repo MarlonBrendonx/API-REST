@@ -3,6 +3,8 @@
 namespace App\Repositories;
 use Illuminate\Http\Request; 
 use App\Models\Adocao;
+use App\Models\Animal;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 /**
  * Class ConvenioRepositoryEloquent.
@@ -23,25 +25,26 @@ class AdoptionRepository {
 
     }
     
-    public function getEventsOptions(Request $request){
+    public function getAnimalsp(Request $request){
 
-        $events_1=DB::table('events')
-                ->join('animals', 'events.animal_id', '=', 'animals.id')
-                ->join('users','animals.users_id','=','users.id')
-                ->select('events.id as id_event','events.type','events.latitude','events.longitude','events.status',
-                'events.photos','events.information','animals.name','animals.sex','animals.personality','users.name as username',
-                'users.phone')
-                ->where('events.type','=',$request->get('option'))
+        $animals=DB::table('animals')
+                ->select('animals.id as id_animals','animals.users_id as user_id')
+                //->join('users','animals.users_id','=','users.id')
+                ->where('animals.id','=',$request->get('id_animals'))
                 ->get();
 
-        $events=DB::table('events')
-                ->select('events.id as id_event','events.type','events.latitude','events.longitude','events.status',
-                'events.photos','events.information')
-                ->whereNull('events.animal_id')
-                ->where('events.type','=',$request->get('option'))
+        return $animals;
+
+    }
+    public function getUsers(Request $request){
+
+        $users=DB::table('users')
+                ->select('users.id as id_users','users.name','users.email','users.phone')
+                //->join('users','users.users_id','=','users.id')
+                ->where('users.id','=',$request->get('id_users'))
                 ->get();
 
-        return $events->merge($events_1);
+        return $users;
 
     }
 
