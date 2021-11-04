@@ -61,6 +61,7 @@ Route::namespace('API')->name('api.')->group(function(){
         Route::post('/get',[AnimalController::class, 'index']);
         Route::post('/',[AnimalController::class, 'register']);
         Route::post('/remove',[AnimalController::class, 'remove']);
+        Route::post('/uploadImage',[AnimalController::class, 'uploadImage']);
         
         
        
@@ -71,6 +72,7 @@ Route::namespace('API')->name('api.')->group(function(){
         Route::post('/',[AdoptionController::class, 'register']);
         Route::post('/getp',[AdoptionController::class, 'indexp']);
         Route::post('/getu',[AdoptionController::class, 'indexu']);
+        Route::post('/remove',[AdoptionController::class, 'remove']);
         
         
        
@@ -80,6 +82,7 @@ Route::namespace('API')->name('api.')->group(function(){
         Route::post('/get',[DoacaoController::class, 'index']);
         Route::post('/',[DoacaoController::class, 'register']);
         Route::post('/getu',[DoacaoController::class, 'indexu']);
+        Route::post('/remove',[DoacaoController::class, 'remove']);
         
         
        
