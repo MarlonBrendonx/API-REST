@@ -6,7 +6,8 @@ use App\Http\Controllers\Api\MapEventsController;
 use App\Http\Controllers\Api\UsersController;
 use App\Http\Controllers\Api\AnimalController;
 use App\Http\Controllers\Api\ResolvedEvents;
-use App\Http\Controllers\Api\NotificationsController;
+use App\Http\Controllers\Api\AdoptionController;
+use App\Http\Controllers\Api\DoacaoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +21,7 @@ use App\Http\Controllers\Api\NotificationsController;
 */
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
-        return $request->user();
+    return $request->user();
 });
 
 
@@ -34,23 +35,16 @@ Route::namespace('API')->name('api.')->group(function(){
         Route::post('/login',[UsersController::class, 'login']);
         Route::post('/checkToken',[UsersController::class, 'checkToken']);
         Route::post('/update',[UsersController::class, 'update']);
-        Route::post('/uploadImagePerfil',[UsersController::class, 'uploadImagePerfil']);
-        Route::post('/remove',[UsersController::class, 'removeUser']);
-        Route::post('/redfinepass',[UsersController::class, 'redfinePass']);
-    
     
     });
 
     Route::prefix('events')->group(function(){
 
         Route::post('/get',[MapEventsController::class, 'index']);
-        Route::post('/getbyId',[MapEventsController::class, 'indexbyId']);
         Route::post('/getOptions',[MapEventsController::class, 'getEventOptions']);
         Route::post('/',[MapEventsController::class, 'register']);
         Route::post('/uploadImage',[MapEventsController::class, 'uploadImage']);
         Route::post('/remove',[MapEventsController::class, 'removeEvent']);
-        Route::post('/update',[MapEventsController::class, 'updateEvent']);
-        Route::post('/searchEvent',[MapEventsController::class, 'searchEvent']);
        
     });
 
@@ -59,31 +53,21 @@ Route::namespace('API')->name('api.')->group(function(){
         Route::post('/get',[ResolvedEvents::class, 'index']);
         Route::post('/',[ResolvedEvents::class, 'register']);
        
-    });
-
-    Route::prefix('notifications')->group(function(){
-
-        Route::post('/get',[NotificationsController::class, 'getNotificationsById']);
-        Route::post('/',[NotificationsController::class, 'register']);
-        Route::post('/remove',[NotificationsController::class, 'removeNotification']);
-      
+       
     });
 
     Route::prefix('animals')->group(function(){
 
         Route::post('/get',[AnimalController::class, 'index']);
         Route::post('/',[AnimalController::class, 'register']);
-        Route::post('/remove',[AnimalController::class, 'remove']);
-        Route::post('/uploadImage',[AnimalController::class, 'uploadImage']);
-
+        
+        
+       
     });
     Route::prefix('adocaos')->group(function(){
 
         Route::post('/get',[AdoptionController::class, 'index']);
         Route::post('/',[AdoptionController::class, 'register']);
-        Route::post('/getp',[AdoptionController::class, 'indexp']);
-        Route::post('/getu',[AdoptionController::class, 'indexu']);
-        Route::post('/remove',[AdoptionController::class, 'remove']);
         
         
        
@@ -92,8 +76,6 @@ Route::namespace('API')->name('api.')->group(function(){
 
         Route::post('/get',[DoacaoController::class, 'index']);
         Route::post('/',[DoacaoController::class, 'register']);
-        Route::post('/getu',[DoacaoController::class, 'indexu']);
-        Route::post('/remove',[DoacaoController::class, 'remove']);
         
         
        

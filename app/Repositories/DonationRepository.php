@@ -3,6 +3,7 @@
 namespace App\Repositories;
 use Illuminate\Http\Request; 
 use App\Models\Adocao;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 /**
  * Class ConvenioRepositoryEloquent.
@@ -19,6 +20,17 @@ class DonationRepository {
                 ->get();
 
         return $doacao;
+
+    }
+    public function getUsers(Request $request){
+
+        $users=DB::table('users')
+                ->select('users.id as id_users','users.name','users.email','users.phone')
+                //->join('users','users.users_id','=','users.id')
+                ->where('users.id','=',$request->get('id_users'))
+                ->get();
+
+        return $users;
 
     }
     

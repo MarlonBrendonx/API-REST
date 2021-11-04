@@ -73,9 +73,15 @@ Route::namespace('API')->name('api.')->group(function(){
 
         Route::post('/get',[AnimalController::class, 'index']);
         Route::post('/',[AnimalController::class, 'register']);
+<<<<<<< HEAD
+           
+=======
         Route::post('/remove',[AnimalController::class, 'remove']);
         Route::post('/uploadImage',[AnimalController::class, 'uploadImage']);
-
+        
+        
+       
+>>>>>>> 74a233837aa5654568fd6aa63474e8c203a09060
     });
     Route::prefix('adocaos')->group(function(){
 
